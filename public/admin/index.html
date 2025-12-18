@@ -6,6 +6,7 @@
     <title>书签管理页面</title>
     <link rel="icon" href="/favicon.svg?v=4" type="image/svg+xml">
     <link rel="stylesheet" href="/css/admin.css?v=7" />
+    <link rel="stylesheet" href="/css/admin-dropdown.css?v=1" />
     <link
       href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;700&display=swap"
       rel="stylesheet"
@@ -89,6 +90,10 @@
           <form id="addCategoryForm">
             <label for="newCategoryName">分类名称:</label>
             <input type="text" id="newCategoryName" required /><br />
+            <label for="newCategoryParent">父级分类(可选):</label>
+            <div id="newCategoryParentWrapper" class="custom-dropdown-wrapper"></div>
+            <input type="hidden" id="newCategoryParent" value="0">
+            <br />
             <label for="newCategorySortOrder">排序值(可选,默认9999):</label>
             <input
               type="number"
@@ -128,7 +133,8 @@
             </div>
             <div class="form-group">
               <label for="addBookmarkCatelog">分类:</label>
-              <select id="addBookmarkCatelog" class="custom-select" required ></select>
+              <div id="addBookmarkCatelogWrapper" class="custom-dropdown-wrapper w-full"></div>
+              <input type="hidden" id="addBookmarkCatelog" required>
             </div>
             <div class="form-group">
               <label for="addBookmarkSortOrder">排序值(可选):</label>
@@ -180,7 +186,8 @@
             </div>
             <div class="form-group">
               <label for="editBookmarkCatelog">分类:</label>
-              <select id="editBookmarkCatelog" name="catelog_id" class="custom-select" required ></select>
+              <div id="editBookmarkCatelogWrapper" class="custom-dropdown-wrapper w-full"></div>
+              <input type="hidden" id="editBookmarkCatelog" name="catelog_id" required>
             </div>
             <div class="form-group">
               <label for="editBookmarkSortOrder">排序值(可选):</label>
@@ -213,12 +220,56 @@
             <input type="hidden" name="id" id="editCategoryId" />
             <label for="editCategoryName">分类名称:</label>
             <input type="text" id="editCategoryName" required /><br />
+            <label for="editCategoryParent">父级分类(可选):</label>
+            <div id="editCategoryParentWrapper" class="custom-dropdown-wrapper"></div>
+            <input type="hidden" id="editCategoryParent" value="0">
+            <br />
             <label for="editCategorySortOrder">排序值(可选):</label>
             <input type="number" id="editCategorySortOrder" /><br />
             <button type="submit">保存</button>
           </form>
         </div>
       </div>
+
+      <!-- 子分类管理模态框 -->
+      <div id="subCategoryModal" class="modal" style="display: none">
+        <div class="modal-content" style="max-width: 800px;">
+          <span class="modal-close" id="closeSubCategoryModal">×</span>
+          <h2 id="subCategoryModalTitle">管理子分类</h2>
+          
+          <div class="mb-6 p-4 bg-gray-50 rounded-lg border border-gray-200">
+             <h3 class="text-sm font-bold mb-2">添加子分类</h3>
+             <form id="addSubCategoryForm" class="flex flex-wrap gap-2 items-end">
+                <input type="hidden" id="currentParentId">
+                <div class="flex-1 min-w-[200px]">
+                    <input type="text" id="subCategoryName" placeholder="子分类名称" required class="w-full mb-0">
+                </div>
+                <div class="w-[100px]">
+                    <input type="number" id="subCategorySort" placeholder="排序" class="w-full mb-0">
+                </div>
+                <button type="submit" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded mb-[1px]">添加</button>
+             </form>
+          </div>
+
+          <div class="table-wrapper">
+            <table class="w-full text-left border-collapse">
+                <thead>
+                    <tr>
+                        <th class="p-2 border bg-gray-100">ID</th>
+                        <th class="p-2 border bg-gray-100">名称</th>
+                        <th class="p-2 border bg-gray-100">排序</th>
+                        <th class="p-2 border bg-gray-100">书签数</th>
+                        <th class="p-2 border bg-gray-100">操作</th>
+                    </tr>
+                </thead>
+                <tbody id="subCategoryList">
+                    <!-- render by js -->
+                </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
       <!-- 设置模态框 -->
       <div id="settingsModal" class="modal settings-modal" style="display: none;">
         <div class="modal-content-wrapper">
